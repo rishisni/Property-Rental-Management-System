@@ -6,7 +6,7 @@ import {
   MDBNavbarNav,
   MDBNavbarItem,
   MDBBtn,
-  MDBIcon,
+  
 } from "mdb-react-ui-kit";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -24,10 +24,20 @@ const Navbar = () => {
     <MDBNavbar expand="lg" light bgColor="light">
       <MDBContainer className="d-flex justify-content-between align-items-center">
         {/* Logo */}
-        <MDBNavbarBrand onClick={() => navigate("/")} style={{ cursor: "pointer" }}>
-          <MDBIcon fas icon="home" className="me-2" />
-          Property Rent
-        </MDBNavbarBrand>
+        <div className="d-flex align-items-center">
+          <MDBNavbarBrand onClick={() => navigate("/")} style={{ cursor: "pointer" }}>
+            <img
+              src="/images/logo.png" // Replace with your image path
+              alt="Property Rent Logo"
+              style={{ width: "110px", height: "40px", marginRight: "10px" }} // Adjust size and margin
+            />
+           
+          </MDBNavbarBrand>
+
+        </div>
+
+        {/* Spacer */}
+        <div className="flex-grow-1"></div>
 
         {/* Navigation */}
         <MDBNavbarNav className="d-flex align-items-center">
@@ -64,16 +74,16 @@ const Navbar = () => {
 
               {/* Logout */}
               <MDBNavbarItem>
-                <MDBBtn size="sm" color="primary" onClick={handleLogout}>Logout</MDBBtn>
+                <MDBBtn size="sm" onClick={handleLogout}>Logout</MDBBtn>
               </MDBNavbarItem>
             </>
           ) : (
             <>
               <MDBNavbarItem>
-                <MDBBtn color="primary" onClick={() => navigate("/login")}>Login</MDBBtn>
+                <MDBBtn onClick={() => navigate("/login")}>Login</MDBBtn>
               </MDBNavbarItem>
               <MDBNavbarItem>
-                <MDBBtn color="secondary" onClick={() => navigate("/register")}>Register</MDBBtn>
+                <MDBBtn onClick={() => navigate("/register")}>Register</MDBBtn>
               </MDBNavbarItem>
             </>
           )}

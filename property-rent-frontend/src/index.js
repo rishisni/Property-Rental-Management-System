@@ -6,6 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import './styles/custom-colors.css'; // Custom styles should come after MDB styles
+import './custom-mdb.scss';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

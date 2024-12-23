@@ -14,6 +14,7 @@ import {
   MDBModalBody,
   MDBModalFooter,
   MDBInput,
+  MDBIcon,
 } from "mdb-react-ui-kit";
 import API from "../services/api";
 
@@ -54,20 +55,6 @@ const Profile = () => {
     fetchUserProfile();
   }, []);
 
-  // Get Wallet Balance
-  const getWalletBalance = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await API.get("/users/wallet-balance", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      console.log("Wallet Balance:", response.data.walletBalance);
-    } catch (error) {
-      console.error("Error fetching wallet balance:", error);
-      setError("Failed to fetch wallet balance.");
-    }
-  };
-
   // Handle Top-Up Wallet
   const handleTopUp = async () => {
     if (!topUpAmount || topUpAmount <= 0) {
@@ -82,13 +69,10 @@ const Profile = () => {
         return;
       }
 
-      const response = await API.post(
-        "/users/wallet/topup",
-        {
-          token: token,
-          amount: topUpAmount,
-        }
-      );
+      const response = await API.post("/users/wallet/topup", {
+        token: token,
+        amount: topUpAmount,
+      });
 
       if (response.status === 200) {
         alert(response.data); // Display success message from backend
@@ -114,8 +98,14 @@ const Profile = () => {
   return (
     <MDBContainer className="my-5">
       <h1 className="text-center mb-4">My Profile</h1>
-      <MDBCard>
+      <MDBCard className="shadow-sm rounded">
         <MDBCardBody>
+          {/* Profile Header */}
+          <div className="text-center mb-4">
+            <MDBIcon fas icon="user-circle" size="4x" className="mb-3 text-primary" />
+            <h4>{user.userName}</h4>
+          </div>
+
           {/* Email */}
           <MDBRow className="mb-3">
             <MDBCol sm="4">
@@ -124,14 +114,7 @@ const Profile = () => {
             <MDBCol sm="8">{user.email}</MDBCol>
           </MDBRow>
           <hr />
-          {/* User Name */}
-          <MDBRow className="mb-3">
-            <MDBCol sm="4">
-              <strong>User Name:</strong>
-            </MDBCol>
-            <MDBCol sm="8">{user.userName}</MDBCol>
-          </MDBRow>
-          <hr />
+
           {/* Wallet Balance */}
           <MDBRow className="mb-3">
             <MDBCol sm="4">
@@ -141,9 +124,7 @@ const Profile = () => {
             <MDBCol sm="4">
               <MDBBtn
                 color="primary"
-                onClick={() => {
-                  setModalOpen(true);
-                }}
+                onClick={() => setModalOpen(true)}
                 className="w-100"
               >
                 Add Balance
@@ -151,6 +132,7 @@ const Profile = () => {
             </MDBCol>
           </MDBRow>
           <hr />
+
           {/* Role */}
           <MDBRow>
             <MDBCol sm="4">

@@ -55,55 +55,51 @@ public class BookingController {
         @PathVariable Long propertyId
     ) {
         ResponseEntity<?> validationResponse = validateAndExtractUser(token);
-
+    
         if (validationResponse.getStatusCode() != HttpStatus.OK) {
             return validationResponse;
         }
-
+    
         User user = (User) validationResponse.getBody();
+    
         try {
             String result = bookingService.bookProperty(user.getUserId(), propertyId);
             return ResponseEntity.ok(Map.of("success", true, "message", result));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("success", false, "message", e.getMessage()));
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("success", false, "message", "An unexpected error occurred. Please try again later."));
         }
     }
+    
 
     @GetMapping("/user/properties")
-public ResponseEntity<?> getBookedProperties(
-    @RequestHeader(value = "Authorization", required = false) String token
-) {
+public ResponseEntity<?> getBookedProperties(@RequestHeader("Authorization") String authHeader) {
+    if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Missing or invalid Authorization header");
+    }
+
     try {
-        // Validate token
-        if (token == null || !token.startsWith("Bearer ")) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Error: Missing or invalid token!");
+        String token = authHeader.substring(7);
+        if (!jwtUtil.isTokenValid(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token");
         }
 
-        String jwtToken = token.substring(7).trim();
-        if (!jwtUtil.isTokenValid(jwtToken)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Error: Invalid token!");
-        }
-
-        // Extract user details from token
-        String email = jwtUtil.extractEmail(jwtToken);
+        String email = jwtUtil.extractEmail(token);
         User user = userService.getUserDetails(email);
-
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Error: User not found!");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
 
-        // Fetch bookings for the user
-        List<Property> bookedProperties = bookingService.getBookedPropertiesForUser(user.getUserId());
-        if (bookedProperties.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No bookings found for this user.");
-        }
+        // Use getUserId() to fetch the ID
+        List<Property> bookedProperties = bookingService.getBookedPropertiesByUser(user.getUserId());
 
         return ResponseEntity.ok(bookedProperties);
     } catch (Exception e) {
-        e.printStackTrace(); // Log the exception for debugging
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error fetching bookings.");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
     }
 }
+
 
 }

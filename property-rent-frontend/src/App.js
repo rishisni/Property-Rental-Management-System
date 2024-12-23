@@ -10,6 +10,7 @@ import AllProperties from "./pages/AllProperties";
 import PropertyDetails from "./pages/PropertyDetails";
 import AddProperty from "./pages/AddProperty";
 import MyBookings from "./pages/MyBookings";
+import Footer from "./components/Footer";
 
 const App = () => {
   return (
@@ -23,10 +24,10 @@ const App = () => {
           <Route path="/profile" element={<Profile />} />
           <Route path="/properties/add" element={<AddProperty />} />
           <Route path="/bookings" element={<MyBookings />} />
-
           <Route path="/properties/all" element={<AllProperties />} />
           <Route path="/properties/:id" element={<PropertyDetails />} />
         </Routes>
+        <Footer />
       </Router>
     </AuthProvider>
   );

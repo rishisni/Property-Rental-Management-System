@@ -8,6 +8,7 @@ import {
   MDBCardTitle,
   MDBCardText,
   MDBBtn,
+  MDBSpinner,
 } from "mdb-react-ui-kit";
 import API from "../services/api";
 import { useNavigate } from "react-router-dom";
@@ -39,7 +40,14 @@ const AllProperties = () => {
   };
 
   if (loading) {
-    return <div className="text-center my-5">Loading properties...</div>;
+    return (
+      <div className="text-center my-5">
+        <MDBSpinner role="status">
+          <span className="visually-hidden">Loading...</span>
+        </MDBSpinner>
+        <p className="mt-3">Loading properties...</p>
+      </div>
+    );
   }
 
   if (error) {
@@ -56,20 +64,22 @@ const AllProperties = () => {
 
   return (
     <MDBContainer className="my-5">
-      <h1 className="text-center mb-4">All Properties</h1>
+      <h1 className="text-center mb-4 text-dark">All Properties</h1>
 
       {/* Available Properties Section */}
       <section>
-        <h2 className="mb-3 text-success">🏡 Available Properties</h2>
+        <h2 className="mb-3 text-primary">🏡 Available Properties</h2>
         {availableProperties.length === 0 ? (
           <div className="text-center mb-4">No available properties at the moment.</div>
         ) : (
           <MDBRow>
             {availableProperties.map((property) => (
               <MDBCol key={property.propertyId} md="4" className="mb-4">
-                <MDBCard border="success">
+                <MDBCard className="h-100 shadow-sm border-0 bg-light">
                   <MDBCardBody>
-                    <MDBCardTitle>{property.propertyName}</MDBCardTitle>
+                    <MDBCardTitle className="text-success">
+                      {property.propertyName}
+                    </MDBCardTitle>
                     <MDBCardText>
                       <strong>Owner:</strong> {property.ownerName}
                     </MDBCardText>
@@ -80,6 +90,7 @@ const AllProperties = () => {
                       <strong>Status:</strong> Available
                     </MDBCardText>
                     <MDBBtn
+                      className="mt-auto"
                       color="success"
                       onClick={() => handleViewProperty(property.propertyId)}
                     >
@@ -104,9 +115,11 @@ const AllProperties = () => {
           <MDBRow>
             {bookedProperties.map((property) => (
               <MDBCol key={property.propertyId} md="4" className="mb-4">
-                <MDBCard border="primary">
+                <MDBCard className="h-100 shadow-sm border-0 bg-light">
                   <MDBCardBody>
-                    <MDBCardTitle>{property.propertyName}</MDBCardTitle>
+                    <MDBCardTitle className="text-primary">
+                      {property.propertyName}
+                    </MDBCardTitle>
                     <MDBCardText>
                       <strong>Owner:</strong> {property.ownerName}
                     </MDBCardText>
@@ -117,6 +130,7 @@ const AllProperties = () => {
                       <strong>Status:</strong> Booked
                     </MDBCardText>
                     <MDBBtn
+                      className="mt-auto"
                       color="primary"
                       onClick={() => handleViewProperty(property.propertyId)}
                     >

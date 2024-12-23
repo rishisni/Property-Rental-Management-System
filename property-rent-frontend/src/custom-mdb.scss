@@ -1,0 +1,12 @@
+// custom-mdb.scss
+
+// Override MDBootstrap color variables
+$primary: #89A8B2;
+$secondary: #B3C8CF;
+$light: #E5E1DA;
+$dark: #4C5C68;
+$body-bg: #F1F0E8;
+
+
+// Import MDBootstrap styles
+@import '~mdb-react-ui-kit/dist/scss/mdb.free.scss';

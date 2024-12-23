@@ -18,9 +18,8 @@ const PropertyDetails = () => {
   const [property, setProperty] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
-  const [bookingStatus, setBookingStatus] = useState(""); // State for storing booking status message
+  const [bookingStatus, setBookingStatus] = useState("");
 
-  // Wrap fetchPropertyDetails with useCallback
   const fetchPropertyDetails = useCallback(async () => {
     try {
       const response = await API.get(`/properties/${id}`);
@@ -31,11 +30,11 @@ const PropertyDetails = () => {
     } finally {
       setLoading(false);
     }
-  }, [id]); // Dependency array includes `id`
+  }, [id]);
 
   useEffect(() => {
     fetchPropertyDetails();
-  }, [fetchPropertyDetails]); // Include fetchPropertyDetails in the dependency array
+  }, [fetchPropertyDetails]);
 
   const handleBookProperty = async () => {
     try {
@@ -45,29 +44,35 @@ const PropertyDetails = () => {
         navigate("/login");
         return;
       }
-
+  
       if (!token.startsWith("Bearer ")) {
         token = `Bearer ${token}`;
       }
-
+  
       const response = await API.post(`/bookings/book/${property.propertyId}`, null, {
         headers: { Authorization: token },
       });
-
-      const message = response.data.message; // Fetch the message from the response
-
-      // Check if the response contains a success message or error
-      if (response.data.success === false || message.startsWith("Error:")) {
-        setBookingStatus(message); // Display error message
+  
+      const { success, message } = response.data;
+  
+      if (!success) {
+        setBookingStatus(`Error: ${message}`);
       } else {
-        setBookingStatus(message); // Display success message (Booking successful)
-        navigate("/profile"); // Redirect to Profile page
+        setBookingStatus(message); // Booking successful
+        // navigate("/properties/a");
       }
     } catch (error) {
       console.error("Error booking property:", error);
-      setBookingStatus("Error: Insufficient wallet balance!"); // Handle unexpected errors
+  
+      if (error.response) {
+        const { message } = error.response.data;
+        setBookingStatus(`Error: ${message}`);
+      } else {
+        setBookingStatus("Error: An unexpected error occurred.");
+      }
     }
   };
+  
 
   if (loading) return <div className="text-center my-5">Loading...</div>;
   if (error)

@@ -30,38 +30,38 @@ public class BookingService {
                     .orElseThrow(() -> new IllegalArgumentException("Error: User not found!"));
             Property property = propertyRepository.findById(propertyId)
                     .orElseThrow(() -> new IllegalArgumentException("Error: Property not found!"));
-
+    
             if (!property.isAvailabilityStatus()) {
-                return "Error: Property not available!";
+                throw new IllegalArgumentException("Error: Property not available!");
             }
-
+    
             if (user.getWalletBalance() < property.getRentAmount()) {
-                return "Error: Insufficient wallet balance!";
+                throw new IllegalArgumentException("Error: Insufficient wallet balance!");
             }
-
+    
             // Deduct rent amount from user's wallet and update property status
             user.setWalletBalance(user.getWalletBalance() - property.getRentAmount());
             property.setAvailabilityStatus(false);
-
+    
             Booking booking = new Booking();
             booking.setUser(user);
             booking.setProperty(property);
             booking.setBookingDate(new Date());
             booking.setAmountPaid(property.getRentAmount());
-
+    
             bookingRepository.save(booking);
             userRepository.save(user);
             propertyRepository.save(property);
-
+    
             return "Booking successful! Booking ID: " + booking.getBookingId();
         } catch (IllegalArgumentException e) {
-            return e.getMessage();
+            throw e; // Re-throw IllegalArgumentException to be handled in the controller
         } catch (Exception e) {
             e.printStackTrace();
-            return "Error: An error occurred during booking. Please try again.";
+            throw new RuntimeException("An unexpected error occurred during booking.");
         }
     }
-
+    
     public List<Property> getBookedPropertiesByUser(Long userId) {
         return bookingRepository.findByUser_UserId(userId).stream()
                 .map(Booking::getProperty)

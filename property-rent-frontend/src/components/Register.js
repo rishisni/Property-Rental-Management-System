@@ -7,7 +7,7 @@ import {
   MDBCardImage,
   MDBRow,
   MDBCol,
-  MDBIcon,
+ 
   MDBInput,
 } from "mdb-react-ui-kit";
 import { useNavigate } from "react-router-dom";
@@ -21,14 +21,14 @@ const Register = () => {
     walletBalance: 0,
   });
 
-  const navigate = useNavigate(); // Hook for navigation
+  const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
       const response = await API.post("/users/register", formData);
       alert(response.data);
-      navigate("/login"); // Navigate to the login page
+      navigate("/login");
     } catch (err) {
       console.error(err);
       alert("Registration failed!");
@@ -41,7 +41,7 @@ const Register = () => {
         <MDBRow className="g-0">
           <MDBCol md="6">
             <MDBCardImage
-              src="/images/slide21.webp"
+              src="/images/home.jpg"
               alt="register form"
               className="rounded-start w-100"
             />
@@ -50,11 +50,11 @@ const Register = () => {
           <MDBCol md="6">
             <MDBCardBody className="d-flex flex-column">
               <div className="d-flex flex-row mt-2">
-                <MDBIcon fas icon="cubes fa-3x me-3" style={{ color: "#ff6219" }} />
+                
                 <span className="h1 fw-bold mb-0">Register</span>
               </div>
 
-              <h5 className="fw-normal my-4 pb-3" style={{ letterSpacing: "1px" }}>
+              <h5 className="fw-normal my-4 pb-3">
                 Create your account
               </h5>
 
@@ -107,7 +107,7 @@ const Register = () => {
                   }
                   required
                 />
-                <MDBBtn className="mb-4 px-5" color="dark" size="lg" type="submit">
+                <MDBBtn className="mb-4 px-5" size="lg" type="submit">
                   Register
                 </MDBBtn>
               </form>
