@@ -4,15 +4,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import java.util.List;
-import java.util.ArrayList;
-import jakarta.persistence.*;
 
 @Entity
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Automatically incrementing ID
     private Long userId;
 
     private String email;
@@ -22,9 +19,6 @@ public class User {
 
     private String role; // "USER" or "ADMIN"
     private boolean isVerified = true; // Default to true
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Booking> bookings = new ArrayList<>();
 
     // Getters and Setters
     public Long getUserId() {
@@ -81,13 +75,5 @@ public class User {
 
     public void setVerified(boolean verified) {
         isVerified = verified;
-    }
-
-    public List<Booking> getBookings() {
-        return bookings;
-    }
-
-    public void setBookings(List<Booking> bookings) {
-        this.bookings = bookings;
     }
 }

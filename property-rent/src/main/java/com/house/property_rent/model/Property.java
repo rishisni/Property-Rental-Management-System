@@ -16,12 +16,13 @@ public class Property {
     private String ownerName;
     private double rentAmount;
     private boolean availabilityStatus = true; // Default to available
+    private String imageUrl;
 
     // Getters and Setters
     public Long getPropertyId() {
         return propertyId;
     }
-
+    
     public void setPropertyId(Long propertyId) {
         this.propertyId = propertyId;
     }
@@ -57,5 +58,6 @@ public class Property {
     public void setAvailabilityStatus(boolean availabilityStatus) {
         this.availabilityStatus = availabilityStatus;
     }
+    
 }
 
